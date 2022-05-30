@@ -106,6 +106,37 @@ DEMO代码地址：[https://github.com/alibaba/easyexcel/blob/master/easyexcel-t
         EasyExcel.read(fileName, DemoData.class, new DemoDataListener()).sheet().doRead();
     }
 ```
+### 读取合并的excelExcel
+DEMO代码地址：[https://github.com/alibaba/easyexcel/blob/master/src/test/java/com/alibaba/easyexcel/demo/read/ReadTest.java](/src/test/java/com/alibaba/easyexcel/test/demo/read/ReadTest.java)
+
+```java
+    /**
+     * 读取合并的单元格
+     * <p>1. 创建excel对应的实体对象 参照{@link DemoData}
+     * <p>2. 对于要读取合并对象的列使用@Collection注解来实现，参照{@link ParameterData}
+     * <p>3. 实现基于读取merge合并的数据监听器{@link com.alibaba.excel.read.listener.AbstractReadMergeListener}
+     * <p>4. 该监听器中自主实现了读取合并数据且转换为实体对象，只需要实现doInvoke即可，当整个excel转换完成后调用doAfter()方法
+     */
+    @Test
+    public void simpleRead() {
+        String fileName = TestFileUtil.getPath() + "demo" + File.separator + "demo.xlsx";
+        // 这里 需要指定读用哪个class去读，然后读取第一个sheet 文件流会自动关闭
+        EasyExcel.read(file.getPath()).head(ParameterData.class).extraRead(CellExtraTypeEnum.MERGE)
+        .useDefaultListener(false)
+        .registerReadListener(new ReadMergeListener<ParameterData>() {
+            @Override
+            public void doInvoke(ParameterData object) {
+              System.out.println(JSONObject.toJSONString(object));
+            }
+          
+            @Override
+            public void doAfter() {
+              System.out.println("读取完成");
+            }
+          })
+        .sheet().doRead();
+    }
+```
 
 ### 写Excel
 DEMO代码地址：[https://github.com/alibaba/easyexcel/blob/master/easyexcel-test/src/test/java/com/alibaba/easyexcel/test/demo/write/WriteTest.java](https://github.com/alibaba/easyexcel/blob/master/easyexcel-test/src/test/java/com/alibaba/easyexcel/test/demo/write/WriteTest.java)

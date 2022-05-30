@@ -14,6 +14,7 @@ import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.cache.MapCache;
 import com.alibaba.excel.converters.string.StringStringConverter;
 import com.alibaba.excel.enums.CellExtraTypeEnum;
+import com.alibaba.excel.read.listener.AbstractReadMergeListener;
 import com.alibaba.excel.read.metadata.ReadSheet;
 import com.alibaba.excel.support.ExcelTypeEnum;
 import com.alibaba.excel.write.metadata.WriteSheet;
@@ -45,7 +46,7 @@ public class ParameterDataTest {
         File file = new File("/Users/zhaoqiang/Desktop/test.xlsx");
         EasyExcel.read(file.getPath()).head(ParameterData.class).headRowNumber(1).extraRead(CellExtraTypeEnum.MERGE)
             .useDefaultListener(false)
-            .registerReadListener(new ReadMergeListener<ParameterData>() {
+            .registerReadListener(new AbstractReadMergeListener<ParameterData>() {
                 @Override
                 public void doInvoke(ParameterData object) {
                     System.out.println(JSONObject.toJSONString(object));
@@ -64,7 +65,7 @@ public class ParameterDataTest {
         File file = new File("/Users/zhaoqiang/Desktop/test1.xlsx");
         EasyExcel.read(file.getPath()).head(ParameterData.class).extraRead(CellExtraTypeEnum.MERGE)
             .useDefaultListener(false)
-            .registerReadListener(new ReadMergeListener<ParameterData>() {
+            .registerReadListener(new AbstractReadMergeListener<ParameterData>() {
                 @Override
                 public void doInvoke(ParameterData object) {
                     System.out.println(JSONObject.toJSONString(object));
@@ -83,7 +84,7 @@ public class ParameterDataTest {
         File file = new File("/Users/zhaoqiang/Desktop/test2.xlsx");
         EasyExcel.read(file.getPath()).head(ParameterData.class).headRowNumber(1).extraRead(CellExtraTypeEnum.MERGE)
             .useDefaultListener(false)
-            .registerReadListener(new ReadMergeListener<ParameterData>() {
+            .registerReadListener(new AbstractReadMergeListener<ParameterData>() {
                 @Override
                 public void doInvoke(ParameterData object) {
                     System.out.println(JSONObject.toJSONString(object));
@@ -102,7 +103,7 @@ public class ParameterDataTest {
         File file = new File("/Users/zhaoqiang/Desktop/test3.xlsx");
         EasyExcel.read(file.getPath()).head(ParameterData.class).headRowNumber(1).extraRead(CellExtraTypeEnum.MERGE)
             .useDefaultListener(false)
-            .registerReadListener(new ReadMergeListener<ParameterData>() {
+            .registerReadListener(new AbstractReadMergeListener<ParameterData>() {
                 @Override
                 public void doInvoke(ParameterData object) {
                     System.out.println(JSONObject.toJSONString(object));

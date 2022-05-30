@@ -1,4 +1,4 @@
-package com.alibaba.easyexcel.test.core.parameter;
+package com.alibaba.excel.read.listener;
 
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.enums.CellDataTypeEnum;
@@ -6,7 +6,6 @@ import com.alibaba.excel.exception.ExcelDataConvertException;
 import com.alibaba.excel.metadata.CellExtra;
 import com.alibaba.excel.metadata.Head;
 import com.alibaba.excel.metadata.data.ReadCellData;
-import com.alibaba.excel.read.listener.IgnoreExceptionReadListener;
 import com.alibaba.excel.read.metadata.holder.ReadHolder;
 import com.alibaba.excel.read.metadata.holder.ReadSheetHolder;
 import com.alibaba.excel.read.metadata.property.ExcelReadHeadProperty;
@@ -22,12 +21,12 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * @Description
+ * @Description 读取合并的单元格
  * @Author zhaoqiang
  * @Date 2022/4/25 11:24 PM
  * @Version
  */
-public abstract class ReadMergeListener<T> implements IgnoreExceptionReadListener<Map<Integer, ReadCellData<?>>> {
+public abstract class AbstractReadMergeListener<T> implements IgnoreExceptionReadListener<Map<Integer, ReadCellData<?>>> {
 
     private TreeMap<Integer, Map<Integer, ReadCellData<?>>> dataMaps = new TreeMap<>();
     private TreeMap<Integer, Map<Integer,CellExtra>> extraMap =new TreeMap<>();
