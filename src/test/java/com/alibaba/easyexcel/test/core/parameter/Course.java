@@ -18,8 +18,8 @@ import java.util.List;
 @Setter
 @EqualsAndHashCode
 public class Course {
-    @ExcelProperty("课次名称")
+    @ExcelProperty(index = 4)
     private String courseName;
-    @ExcelCollection
+    @ExcelCollection(index = 5)
     private List<Student> studetList;
 }

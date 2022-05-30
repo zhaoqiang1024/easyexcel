@@ -17,10 +17,10 @@ import java.util.List;
 @EqualsAndHashCode
 public class ParameterData {
 
-    @ExcelProperty(value = "姓名")
+    @ExcelProperty(index = 3)
     private String name;
-    @ExcelCollection
+    @ExcelCollection(index = 4)
     private List<Course> courseList;
-    @ExcelCollection
+    @ExcelCollection(index = 6)
     private List<ParameterData1> workList;
 }
