@@ -3,6 +3,7 @@ package com.alibaba.excel.metadata;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.alibaba.excel.exception.ExcelGenerateException;
 import com.alibaba.excel.metadata.property.ColumnWidthProperty;
@@ -27,6 +28,8 @@ public class Head {
      * Column index of head
      */
     private Integer columnIndex;
+
+    private Integer lastColumnIndex;
     /**
      * It only has values when passed in {@link Sheet#setClazz(Class)} and {@link Table#setClazz(Class)}
      */
@@ -66,7 +69,11 @@ public class Head {
      */
     private FontProperty headFontProperty;
 
-    public Head(Integer columnIndex, Field field, String fieldName, List<String> headNameList, Boolean forceIndex,
+    private Class<?> collectionClass;
+    private Map<Integer,Head> nextHead;
+    private String type;
+
+    public Head(Integer columnIndex, Field field,Class<?> collectionClass, String fieldName, List<String> headNameList, Boolean forceIndex,
         Boolean forceName) {
         this.columnIndex = columnIndex;
         this.field = field;
@@ -83,5 +90,7 @@ public class Head {
         }
         this.forceIndex = forceIndex;
         this.forceName = forceName;
+        this.collectionClass = collectionClass;
+        this.type="NORMAL";
     }
 }

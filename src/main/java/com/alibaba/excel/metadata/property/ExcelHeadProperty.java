@@ -1,12 +1,11 @@
 package com.alibaba.excel.metadata.property;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.*;
 
+import com.alibaba.excel.annotation.ExcelCollection;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.enums.HeadKindEnum;
 import com.alibaba.excel.metadata.Head;
@@ -70,7 +69,7 @@ public class ExcelHeadProperty {
                         continue;
                     }
                 }
-                headMap.put(headIndex, new Head(headIndex, null, null, head.get(i), Boolean.FALSE, Boolean.TRUE));
+                headMap.put(headIndex, new Head(headIndex, null, null,null, head.get(i), Boolean.FALSE, Boolean.TRUE));
                 headIndex++;
             }
             headKind = HeadKindEnum.STRING;
@@ -118,13 +117,46 @@ public class ExcelHeadProperty {
                 .isEmpty(((AbstractWriteHolder)holder).getIncludeColumnFieldNames()) || !CollectionUtils
                 .isEmpty(((AbstractWriteHolder)holder).getIncludeColumnIndexes()));
 
-        ClassUtils.declaredFields(headClazz, sortedAllFiledMap, indexFiledMap, ignoreMap, needIgnore, holder);
-
-        for (Map.Entry<Integer, Field> entry : sortedAllFiledMap.entrySet()) {
-            initOneColumnProperty(entry.getKey(), entry.getValue(), indexFiledMap.containsKey(entry.getKey()));
-        }
+        //将class转换为Field，仅第一层
+        Head parent = null;
+        initHead(0,headClazz, parent, sortedAllFiledMap, indexFiledMap, needIgnore, holder);
         headKind = HeadKindEnum.CLASS;
     }
+
+    private int initHead(int lastIndex,Class<?> headClazz, Head parentHead, Map<Integer, Field> sortedAllFiledMap, Map<Integer, Field> indexFiledMap, boolean needIgnore, Holder holder) {
+        ClassUtils.declaredFields(headClazz, sortedAllFiledMap, indexFiledMap, ignoreMap, needIgnore, holder);
+        Map<Integer, Head> newHeadMap = MapUtils.newTreeMap();
+        Iterator<Map.Entry<Integer,Field>> iterator =sortedAllFiledMap.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<Integer, Field> entry = iterator.next();
+            if(lastIndex<entry.getKey()){
+                lastIndex = entry.getKey();
+            }
+            int index = lastIndex;
+            Head head = initOneColumnProperty(index, entry.getValue(), indexFiledMap.containsKey(entry.getKey()));
+            newHeadMap.put(index, head);
+            //输入holder不处理list结构
+            if (holder instanceof AbstractWriteHolder) {
+                continue;
+            }
+            //查询是否为list类型字段
+            Class<?> collectionClass = this.getCollectionClass(entry.getValue());
+            if (collectionClass != null) {
+                head.setType("LIST");
+                lastIndex = initHead(lastIndex,collectionClass, head, MapUtils.newTreeMap(), MapUtils.newTreeMap(), false, holder);
+            }
+            if (iterator.hasNext()) {
+                lastIndex++;
+            }
+        }
+        if (parentHead != null) {
+            parentHead.setNextHead(newHeadMap);
+        } else {
+            headMap = newHeadMap;
+        }
+        return lastIndex;
+    }
+
 
     /**
      * Initialization column property
@@ -134,10 +166,11 @@ public class ExcelHeadProperty {
      * @param forceIndex
      * @return Ignore current field
      */
-    private void initOneColumnProperty(int index, Field field, Boolean forceIndex) {
+    private Head initOneColumnProperty(int index, Field field, Boolean forceIndex) {
         ExcelProperty excelProperty = field.getAnnotation(ExcelProperty.class);
         List<String> tmpHeadList = new ArrayList<String>();
         String fieldName = FieldUtils.resolveCglibFieldName(field);
+        //无指定模板名称
         boolean notForceName = excelProperty == null || excelProperty.value().length <= 0
             || (excelProperty.value().length == 1 && StringUtils.isEmpty((excelProperty.value())[0]));
         if (headMap.containsKey(index)) {
@@ -149,8 +182,20 @@ public class ExcelHeadProperty {
                 Collections.addAll(tmpHeadList, excelProperty.value());
             }
         }
-        Head head = new Head(index, field, fieldName, tmpHeadList, forceIndex, !notForceName);
-        headMap.put(index, head);
+        Head head = new Head(index, field,getCollectionClass(field), fieldName, tmpHeadList, forceIndex, !notForceName);
+        return head;
+    }
+
+    private Class<?> getCollectionClass(Field field) {
+        ExcelCollection collection = field.getAnnotation(ExcelCollection.class);
+        boolean listField = field.getClass().isAssignableFrom(List.class);
+        Class<?> collectionClass = null;
+        if (collection != null || listField) {
+            Type gt = field.getGenericType();
+            ParameterizedType pt = (ParameterizedType) gt;
+            collectionClass = (Class) pt.getActualTypeArguments()[0];
+        }
+        return collectionClass;
     }
 
     public boolean hasHead() {
