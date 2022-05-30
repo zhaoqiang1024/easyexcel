@@ -15,6 +15,6 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode
 public class Student {
-    @ExcelProperty("学生名称")
+    @ExcelProperty(index = 5)
     private String studentName;
 }

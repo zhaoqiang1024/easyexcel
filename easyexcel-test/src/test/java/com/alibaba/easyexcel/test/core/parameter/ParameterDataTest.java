@@ -4,23 +4,22 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.LockSupport;
 
 import com.alibaba.easyexcel.test.util.TestFileUtil;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelReader;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.cache.MapCache;
-import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.converters.string.StringStringConverter;
 import com.alibaba.excel.enums.CellExtraTypeEnum;
-import com.alibaba.excel.metadata.data.ReadCellData;
-import com.alibaba.excel.read.listener.IgnoreExceptionReadListener;
 import com.alibaba.excel.read.metadata.ReadSheet;
 import com.alibaba.excel.support.ExcelTypeEnum;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.alibaba.excel.write.metadata.WriteTable;
 
+import com.alibaba.fastjson.JSONObject;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -46,8 +45,76 @@ public class ParameterDataTest {
         File file = new File("/Users/zhaoqiang/Desktop/test.xlsx");
         EasyExcel.read(file.getPath()).head(ParameterData.class).headRowNumber(1).extraRead(CellExtraTypeEnum.MERGE)
             .useDefaultListener(false)
-            .registerReadListener(new ConsumeReadListener())
+            .registerReadListener(new ReadMergeListener<ParameterData>() {
+                @Override
+                public void doInvoke(ParameterData object) {
+                    System.out.println(JSONObject.toJSONString(object));
+                }
+
+                @Override
+                public void doAfter() {
+                    System.out.println("读取完成");
+                }
+            })
             .sheet().doRead();
+    }
+
+    @Test
+    public void merge1(){
+        File file = new File("/Users/zhaoqiang/Desktop/test1.xlsx");
+        EasyExcel.read(file.getPath()).head(ParameterData.class).extraRead(CellExtraTypeEnum.MERGE)
+            .useDefaultListener(false)
+            .registerReadListener(new ReadMergeListener<ParameterData>() {
+                @Override
+                public void doInvoke(ParameterData object) {
+                    System.out.println(JSONObject.toJSONString(object));
+                }
+
+                @Override
+                public void doAfter() {
+                    System.out.println("读取完成");
+                }
+            })
+            .sheet().doRead();
+        LockSupport.parkNanos(TimeUnit.SECONDS.toNanos(2));
+    }
+    @Test
+    public void merge2(){
+        File file = new File("/Users/zhaoqiang/Desktop/test2.xlsx");
+        EasyExcel.read(file.getPath()).head(ParameterData.class).headRowNumber(1).extraRead(CellExtraTypeEnum.MERGE)
+            .useDefaultListener(false)
+            .registerReadListener(new ReadMergeListener<ParameterData>() {
+                @Override
+                public void doInvoke(ParameterData object) {
+                    System.out.println(JSONObject.toJSONString(object));
+                }
+
+                @Override
+                public void doAfter() {
+                    System.out.println("读取完成");
+                }
+            })
+            .sheet().doRead();
+        LockSupport.parkNanos(TimeUnit.SECONDS.toNanos(2));
+    }
+    @Test
+    public void merge3(){
+        File file = new File("/Users/zhaoqiang/Desktop/test3.xlsx");
+        EasyExcel.read(file.getPath()).head(ParameterData.class).headRowNumber(1).extraRead(CellExtraTypeEnum.MERGE)
+            .useDefaultListener(false)
+            .registerReadListener(new ReadMergeListener<ParameterData>() {
+                @Override
+                public void doInvoke(ParameterData object) {
+                    System.out.println(JSONObject.toJSONString(object));
+                }
+
+                @Override
+                public void doAfter() {
+                    System.out.println("读取完成");
+                }
+            })
+            .sheet().doRead();
+        LockSupport.parkNanos(TimeUnit.SECONDS.toNanos(2));
     }
 
     @Test

@@ -15,8 +15,8 @@ import java.util.List;
 @Setter
 @EqualsAndHashCode
 public class ParameterData1 {
-    @ExcelProperty("工作")
+    @ExcelProperty(index = 6)
     private String workName;
-    @ExcelCollection
+    @ExcelCollection(index = 7)
     private List<ParameterData2> workList;
 }

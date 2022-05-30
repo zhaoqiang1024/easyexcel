@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.alibaba.excel.annotation.ExcelCollection;
 import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
@@ -340,6 +341,19 @@ public class ClassUtils {
                     + "' and '" + field.getName() + "' must be inconsistent");
             }
             indexFieldMap.put(excelProperty.index(), field);
+            return;
+        }
+        ExcelCollection excelCollection = field.getAnnotation(ExcelCollection.class);
+        if (excelCollection == null && isStaticFinalOrTransient) {
+            ignoreMap.put(field.getName(), field);
+            return;
+        }
+        if (excelCollection != null && excelCollection.index() >= 0) {
+            if (indexFiledMap.containsKey(excelCollection.index())) {
+                throw new ExcelCommonException("The index of '" + indexFiledMap.get(excelProperty.index()).getName()
+                    + "' and '" + field.getName() + "' must be inconsistent");
+            }
+            indexFiledMap.put(excelCollection.index(), field);
             return;
         }
 

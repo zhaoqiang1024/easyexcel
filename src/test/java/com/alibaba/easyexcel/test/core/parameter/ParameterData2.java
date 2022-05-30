@@ -15,8 +15,8 @@ import java.util.List;
 @Setter
 @EqualsAndHashCode
 public class ParameterData2 {
-    @ExcelProperty("经历")
+    @ExcelProperty(index = 7)
     private String experience;
-    @ExcelProperty("年龄")
+    @ExcelProperty(index = 8)
     private String age;
 }

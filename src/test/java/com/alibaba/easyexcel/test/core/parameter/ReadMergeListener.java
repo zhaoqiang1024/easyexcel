@@ -13,8 +13,6 @@ import com.alibaba.excel.read.metadata.property.ExcelReadHeadProperty;
 import com.alibaba.excel.util.BeanMapUtils;
 import com.alibaba.excel.util.ClassUtils;
 import com.alibaba.excel.util.ConverterUtils;
-import com.alibaba.excel.util.MapUtils;
-import com.alibaba.fastjson.JSON;
 import net.sf.cglib.beans.BeanMap;
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -29,11 +27,10 @@ import java.util.TreeMap;
  * @Date 2022/4/25 11:24 PM
  * @Version
  */
-public class ConsumeReadListener<T> implements IgnoreExceptionReadListener<Map<Integer, ReadCellData<?>>> {
+public abstract class ReadMergeListener<T> implements IgnoreExceptionReadListener<Map<Integer, ReadCellData<?>>> {
 
     private TreeMap<Integer, Map<Integer, ReadCellData<?>>> dataMaps = new TreeMap<>();
     private TreeMap<Integer, Map<Integer,CellExtra>> extraMap =new TreeMap<>();
-    private List resultList = new ArrayList<>();
 
     @Override
     public void invokeHead(Map<Integer, ReadCellData<?>> cellDataMap, AnalysisContext context) {
@@ -48,40 +45,7 @@ public class ConsumeReadListener<T> implements IgnoreExceptionReadListener<Map<I
         dataMaps.put(context.readSheetHolder().getRowIndex(),cellDataMap);
     }
 
-    private Object buildStringList(Map<Integer, ReadCellData<?>> cellDataMap, ReadSheetHolder readSheetHolder,
-                                   AnalysisContext context) {
-        int index = 0;
-        Map<Integer, String> map = MapUtils.newLinkedHashMapWithExpectedSize(cellDataMap.size());
-        for (Map.Entry<Integer, ReadCellData<?>> entry : cellDataMap.entrySet()) {
-            Integer key = entry.getKey();
-            ReadCellData<?> cellData = entry.getValue();
-            while (index < key) {
-                map.put(index, null);
-                index++;
-            }
-            index++;
-            map.put(key,
-                (String) ConverterUtils.convertToJavaObject(cellData, null, null, readSheetHolder.converterMap(),
-                    context, context.readRowHolder().getRowIndex(), key));
-        }
-        // fix https://github.com/alibaba/easyexcel/issues/2014
-        int headSize = calculateHeadSize(readSheetHolder);
-        while (index < headSize) {
-            map.put(index, null);
-            index++;
-        }
-        return map;
-    }
-
-    private int calculateHeadSize(ReadSheetHolder readSheetHolder) {
-        if (readSheetHolder.excelReadHeadProperty().getHeadMap().size() > 0) {
-            return readSheetHolder.excelReadHeadProperty().getHeadMap().size();
-        }
-        if (readSheetHolder.getMaxDataHeadSize() != null) {
-            return readSheetHolder.getMaxDataHeadSize();
-        }
-        return 0;
-    }
+    public abstract void doInvoke(T object);
 
     @Override
     public void doAfterAllAnalysed(AnalysisContext context) {
@@ -102,10 +66,15 @@ public class ConsumeReadListener<T> implements IgnoreExceptionReadListener<Map<I
             } else {
                 obj= this.convertBean(data, context.readSheetHolder(), index, context);
             }
-            resultList.add(obj);
+            this.doInvoke((T) obj);
         }
-        System.out.println(JSON.toJSONString(resultList));
+        this.doAfter();
     }
+
+    /**
+     * 读取完成
+     */
+    public abstract void doAfter();
 
     /**
      * 转换单行未merge对象
@@ -274,9 +243,8 @@ public class ConsumeReadListener<T> implements IgnoreExceptionReadListener<Map<I
 
     @Override
     public void extra(CellExtra extra, AnalysisContext context) {
-        System.out.println("有额外数据");
         Integer rowHeadNumber = context.readSheetHolder().getHeadRowNumber();
-        if (extra.getRowIndex() <= rowHeadNumber) {
+        if (extra.getRowIndex() <= rowHeadNumber-1) {
             return;
         }
         Map<Integer, CellExtra> cellMap = new TreeMap<>();
