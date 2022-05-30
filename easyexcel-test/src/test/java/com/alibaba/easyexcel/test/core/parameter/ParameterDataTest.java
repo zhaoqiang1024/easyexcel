@@ -4,13 +4,18 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.alibaba.easyexcel.test.util.TestFileUtil;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelReader;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.cache.MapCache;
+import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.converters.string.StringStringConverter;
+import com.alibaba.excel.enums.CellExtraTypeEnum;
+import com.alibaba.excel.metadata.data.ReadCellData;
+import com.alibaba.excel.read.listener.IgnoreExceptionReadListener;
 import com.alibaba.excel.read.metadata.ReadSheet;
 import com.alibaba.excel.support.ExcelTypeEnum;
 import com.alibaba.excel.write.metadata.WriteSheet;
@@ -34,6 +39,15 @@ public class ParameterDataTest {
     public static void init() {
         file07 = TestFileUtil.createNewFile("parameter07.xlsx");
         fileCsv = TestFileUtil.createNewFile("parameterCsv.csv");
+    }
+
+    @Test
+    public void test(){
+        File file = new File("/Users/zhaoqiang/Desktop/test.xlsx");
+        EasyExcel.read(file.getPath()).head(ParameterData.class).headRowNumber(1).extraRead(CellExtraTypeEnum.MERGE)
+            .useDefaultListener(false)
+            .registerReadListener(new ConsumeReadListener())
+            .sheet().doRead();
     }
 
     @Test

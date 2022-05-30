@@ -3,6 +3,7 @@ package com.alibaba.easyexcel.test.core.parameter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.alibaba.excel.metadata.CellExtra;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,5 +32,11 @@ public class ParameterDataListener extends AnalysisEventListener<ParameterData> 
         Assert.assertEquals(
             context.readSheetHolder().getExcelReadHeadProperty().getHeadMap().get(0).getHeadNameList().get(0), "姓名");
         LOGGER.debug("First row:{}", JSON.toJSONString(list.get(0)));
+    }
+
+    @Override
+    public void extra(CellExtra extra, AnalysisContext context) {
+        System.out.println("有额外的信息");
+        super.extra(extra, context);
     }
 }

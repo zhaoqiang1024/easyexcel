@@ -31,9 +31,9 @@ public @interface ExcelProperty {
 
     /**
      * Index of column
-     *
+     * <p>
      * Read or write it on the index of column, If it's equal to -1, it's sorted by Java class.
-     *
+     * <p>
      * priority: index &gt; order &gt; default sort
      *
      * @return Index of column
@@ -42,7 +42,7 @@ public @interface ExcelProperty {
 
     /**
      * Defines the sort order for an column.
-     *
+     * <p>
      * priority: index &gt; order &gt; default sort
      *
      * @return Order of column
@@ -57,7 +57,6 @@ public @interface ExcelProperty {
     Class<? extends Converter<?>> converter() default AutoConverter.class;
 
     /**
-     *
      * default @see com.alibaba.excel.util.TypeUtil if default is not meet you can set format
      *
      * @return Format string
@@ -65,4 +64,7 @@ public @interface ExcelProperty {
      */
     @Deprecated
     String format() default "";
+
+    int type() default 0;
+
 }

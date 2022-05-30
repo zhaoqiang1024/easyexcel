@@ -220,6 +220,7 @@ public class ClassUtils {
         tempIndexFieldMap.putAll(fieldCache.getIndexFieldMap());
 
         Map<Integer, Field> originSortedAllFieldMap = fieldCache.getSortedAllFieldMap();
+        //excel为读时此字段为false
         if (!needIgnore) {
             sortedAllFieldMap.putAll(originSortedAllFieldMap);
             return;
@@ -292,6 +293,8 @@ public class ClassUtils {
 
         Map<Integer, Field> tempIndexFieldMap = new HashMap<Integer, Field>(indexFieldMap);
         int index = 0;
+        //将orderFileMap与indexMap重排，优先处理indexMap中指定的index值
+        //将index未指定的位置使用orderFieldMap进行补位
         for (List<Field> fieldList : orderFieldMap.values()) {
             for (Field field : fieldList) {
                 while (tempIndexFieldMap.containsKey(index)) {
@@ -317,11 +320,13 @@ public class ClassUtils {
             return;
         }
         ExcelProperty excelProperty = field.getAnnotation(ExcelProperty.class);
+        //没有增加ExcelProperty注解的不参与读写
         boolean noExcelProperty = excelProperty == null && excelIgnoreUnannotated != null;
         if (noExcelProperty) {
             ignoreMap.put(field.getName(), field);
             return;
         }
+        //静态属性并且增加了final或者以Transient注释的不参与读写
         boolean isStaticFinalOrTransient =
             (Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()))
                 || Modifier.isTransient(field.getModifiers());
