@@ -12,8 +12,8 @@ import com.alibaba.excel.read.metadata.property.ExcelReadHeadProperty;
 import com.alibaba.excel.util.BeanMapUtils;
 import com.alibaba.excel.util.ClassUtils;
 import com.alibaba.excel.util.ConverterUtils;
-import net.sf.cglib.beans.BeanMap;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.cglib.beans.BeanMap;
 
 import java.util.ArrayList;
 import java.util.List;

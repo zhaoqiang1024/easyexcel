@@ -119,7 +119,7 @@ public class ExcelHeadProperty {
 
         //将class转换为Field，仅第一层
         Head parent = null;
-        initHead(0,headClazz, parent, sortedAllFiledMap, indexFiledMap, needIgnore, holder);
+        initHead(0,headClazz, parent, sortedAllFieldMap, indexFieldMap, needIgnore, holder);
         headKind = HeadKindEnum.CLASS;
     }
 

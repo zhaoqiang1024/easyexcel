@@ -41,82 +41,82 @@ public class ParameterDataTest {
         fileCsv = TestFileUtil.createNewFile("parameterCsv.csv");
     }
 
-    @Test
-    public void test(){
-        File file = new File("/Users/zhaoqiang/Desktop/test.xlsx");
-        EasyExcel.read(file.getPath()).head(ParameterData.class).headRowNumber(1).extraRead(CellExtraTypeEnum.MERGE)
-            .useDefaultListener(false)
-            .registerReadListener(new AbstractReadMergeListener<ParameterData>() {
-                @Override
-                public void doInvoke(ParameterData object) {
-                    System.out.println(JSONObject.toJSONString(object));
-                }
+//    @Test
+//    public void test(){
+//        File file = new File("/Users/zhaoqiang/Desktop/test.xlsx");
+//        EasyExcel.read(file.getPath()).head(ParameterData.class).headRowNumber(1).extraRead(CellExtraTypeEnum.MERGE)
+//            .useDefaultListener(false)
+//            .registerReadListener(new AbstractReadMergeListener<ParameterData>() {
+//                @Override
+//                public void doInvoke(ParameterData object) {
+//                    System.out.println(JSONObject.toJSONString(object));
+//                }
+//
+//                @Override
+//                public void doAfter() {
+//                    System.out.println("读取完成");
+//                }
+//            })
+//            .sheet().doRead();
+//    }
 
-                @Override
-                public void doAfter() {
-                    System.out.println("读取完成");
-                }
-            })
-            .sheet().doRead();
-    }
-
-    @Test
-    public void merge1(){
-        File file = new File("/Users/zhaoqiang/Desktop/test1.xlsx");
-        EasyExcel.read(file.getPath()).head(ParameterData.class).extraRead(CellExtraTypeEnum.MERGE)
-            .useDefaultListener(false)
-            .registerReadListener(new AbstractReadMergeListener<ParameterData>() {
-                @Override
-                public void doInvoke(ParameterData object) {
-                    System.out.println(JSONObject.toJSONString(object));
-                }
-
-                @Override
-                public void doAfter() {
-                    System.out.println("读取完成");
-                }
-            })
-            .sheet().doRead();
-        LockSupport.parkNanos(TimeUnit.SECONDS.toNanos(2));
-    }
-    @Test
-    public void merge2(){
-        File file = new File("/Users/zhaoqiang/Desktop/test2.xlsx");
-        EasyExcel.read(file.getPath()).head(ParameterData.class).headRowNumber(1).extraRead(CellExtraTypeEnum.MERGE)
-            .useDefaultListener(false)
-            .registerReadListener(new AbstractReadMergeListener<ParameterData>() {
-                @Override
-                public void doInvoke(ParameterData object) {
-                    System.out.println(JSONObject.toJSONString(object));
-                }
-
-                @Override
-                public void doAfter() {
-                    System.out.println("读取完成");
-                }
-            })
-            .sheet().doRead();
-        LockSupport.parkNanos(TimeUnit.SECONDS.toNanos(2));
-    }
-    @Test
-    public void merge3(){
-        File file = new File("/Users/zhaoqiang/Desktop/test3.xlsx");
-        EasyExcel.read(file.getPath()).head(ParameterData.class).headRowNumber(1).extraRead(CellExtraTypeEnum.MERGE)
-            .useDefaultListener(false)
-            .registerReadListener(new AbstractReadMergeListener<ParameterData>() {
-                @Override
-                public void doInvoke(ParameterData object) {
-                    System.out.println(JSONObject.toJSONString(object));
-                }
-
-                @Override
-                public void doAfter() {
-                    System.out.println("读取完成");
-                }
-            })
-            .sheet().doRead();
-        LockSupport.parkNanos(TimeUnit.SECONDS.toNanos(2));
-    }
+//    @Test
+//    public void merge1(){
+//        File file = new File("/Users/zhaoqiang/Desktop/test1.xlsx");
+//        EasyExcel.read(file.getPath()).head(ParameterData.class).extraRead(CellExtraTypeEnum.MERGE)
+//            .useDefaultListener(false)
+//            .registerReadListener(new AbstractReadMergeListener<ParameterData>() {
+//                @Override
+//                public void doInvoke(ParameterData object) {
+//                    System.out.println(JSONObject.toJSONString(object));
+//                }
+//
+//                @Override
+//                public void doAfter() {
+//                    System.out.println("读取完成");
+//                }
+//            })
+//            .sheet().doRead();
+//        LockSupport.parkNanos(TimeUnit.SECONDS.toNanos(2));
+//    }
+//    @Test
+//    public void merge2(){
+//        File file = new File("/Users/zhaoqiang/Desktop/test2.xlsx");
+//        EasyExcel.read(file.getPath()).head(ParameterData.class).headRowNumber(1).extraRead(CellExtraTypeEnum.MERGE)
+//            .useDefaultListener(false)
+//            .registerReadListener(new AbstractReadMergeListener<ParameterData>() {
+//                @Override
+//                public void doInvoke(ParameterData object) {
+//                    System.out.println(JSONObject.toJSONString(object));
+//                }
+//
+//                @Override
+//                public void doAfter() {
+//                    System.out.println("读取完成");
+//                }
+//            })
+//            .sheet().doRead();
+//        LockSupport.parkNanos(TimeUnit.SECONDS.toNanos(2));
+//    }
+//    @Test
+//    public void merge3(){
+//        File file = new File("/Users/zhaoqiang/Desktop/test3.xlsx");
+//        EasyExcel.read(file.getPath()).head(ParameterData.class).headRowNumber(1).extraRead(CellExtraTypeEnum.MERGE)
+//            .useDefaultListener(false)
+//            .registerReadListener(new AbstractReadMergeListener<ParameterData>() {
+//                @Override
+//                public void doInvoke(ParameterData object) {
+//                    System.out.println(JSONObject.toJSONString(object));
+//                }
+//
+//                @Override
+//                public void doAfter() {
+//                    System.out.println("读取完成");
+//                }
+//            })
+//            .sheet().doRead();
+//        LockSupport.parkNanos(TimeUnit.SECONDS.toNanos(2));
+//    }
 
     @Test
     public void t01ReadAndWrite() throws Exception {

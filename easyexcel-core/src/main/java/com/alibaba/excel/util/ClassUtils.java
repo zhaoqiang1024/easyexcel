@@ -349,11 +349,11 @@ public class ClassUtils {
             return;
         }
         if (excelCollection != null && excelCollection.index() >= 0) {
-            if (indexFiledMap.containsKey(excelCollection.index())) {
-                throw new ExcelCommonException("The index of '" + indexFiledMap.get(excelProperty.index()).getName()
+            if (indexFieldMap.containsKey(excelCollection.index())) {
+                throw new ExcelCommonException("The index of '" + indexFieldMap.get(excelProperty.index()).getName()
                     + "' and '" + field.getName() + "' must be inconsistent");
             }
-            indexFiledMap.put(excelCollection.index(), field);
+            indexFieldMap.put(excelCollection.index(), field);
             return;
         }
 
